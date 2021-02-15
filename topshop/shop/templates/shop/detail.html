@@ -1,0 +1,51 @@
+{% extends 'shop/base.html' %}
+{% block content %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-12">
+              <img src="{{ product_object.image }}">
+
+            </div>
+
+          </div>
+
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-12"><i><b>Title: </b></i>
+              {{product_object.title}}
+
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-md-12"><i><b>Regular price: </b></i>
+              {{product_object.price}}
+
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-md-12"><i><b>Discounted price: </b></i>
+              {{product_object.discounted_price}}
+
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-md-12"><i><b>Description: </b></i>
+              {{product_object.description}}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </body>
+{% endblock %}

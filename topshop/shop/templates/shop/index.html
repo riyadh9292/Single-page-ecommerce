@@ -1,0 +1,193 @@
+{% extends 'shop/base.html' %}
+{% block content %}
+
+
+
+      <div class="row">
+        <div class="col-md-12">
+          <form class="card card-sm">
+            <div class="card-body row no-gutters align-item-center">
+              <div class="col">
+                <input type="search" name="item_name" placeholder="Search for products" class="form-control form-control-borderless" value="">
+
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="btn btn-success" name="button">Search</button>
+
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+
+      <div class="row">
+        {% for product in product_objects %}
+        <div class="col-md-3">
+          <div class="card">
+            <img src="{{product.image}}" alt="" class="card-img-top">
+            <div class="card-body">
+              <div id="nm{{product.id}}" class="card-title">{{ product.title }}</div>
+              <div id="price{{product.id}}" class="card-text">
+                {{ product.price }} tk
+
+              </div>
+              <a href="/{{product.id}}" class="btn btn-warning" name="button">View</a>
+              <button id="{{product.id}}" class="btn atc btn-warning" name="button">Add to cart</button>
+
+            </div>
+
+          </div>
+
+        </div>
+        {% endfor %}
+
+      </div>
+      <div class="row">
+        <div class="col-md-3 offset-md-4">
+          <ul class="pagination">
+            {% if product_objects.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ product_objects.previous_page_number }}">Previous</a>
+            </li>
+
+            {% endif %}
+
+
+            <li class="page-item active">
+              <a class="page-link" href="?page={{ product_objects.number }}">{{product_objects.number}}</a>
+            </li>
+
+
+            {% if product_objects.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ product_objects.next_page_number }}">Next</a>
+            </li>
+
+            {% endif %}
+
+          </ul>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
+    -->
+  </body>
+  <script type="text/javascript">
+    if(localStorage.getItem('cart')==null){
+      var cart={};
+    }
+    else{
+      cart = JSON.parse(localStorage.getItem('cart'));
+    }
+    $(document).on('click','.atc',function(){
+      var item_id = this.id.toString();
+      console.log(item_id);
+
+      if(cart[item_id]!=undefined){
+        quantity=cart[item_id][0];
+        cart[item_id][0]=quantity;
+        cart[item_id][2]= cart[item_id][2] + parseFloat(document.getElementById("price"+item_id).innerHTML);
+      }else {
+        quantity = 1;
+        price= parseFloat(document.getElementById("price"+item_id).innerHTML);
+        name = document.getElementById("nm"+item_id).innerHTML;
+        cart[item_id]=[quantity,name,price];
+
+      }
+      console.log(cart);
+      localStorage.setItem('cart',JSON.stringify(cart));
+      document.getElementById("cart").innerHTML = "Cart("+ Object.keys(cart).length+")";
+
+    });
+    /*$(function () {
+      $('[data-toggle="popover"]').popover();
+      document.getElementById("cart").setAttribute('data-content',"<h5>Your Cart</h5>");
+    });*/
+    DisplayCart(cart);
+    function DisplayCart(cart){
+      var cartString="";
+      cartString += "<h5>Your Cart</h5>";
+      var cartIndex=1;
+      for(var x in cart){
+        cartString += cartIndex;
+        cartString += document.getElementById("nm"+x).innerHTML + "Qty:" + cart[x][0]+"</br>";
+        cartIndex+=1;
+      }
+      cartString += "<a href='{% url "checkout" %}'><button class='btn btn-warning' id='checkout'>Checkout</button></a>";
+      document.getElementById("cart").setAttribute('data-content',cartString);
+      $('[data-toggle="popover"]').popover();
+
+    }
+
+
+  </script>
+  <!--<script type="text/javascript">
+    //console.log("working");
+   if(localStorage.getItem('cart')==null){
+      var cart={};
+    }
+    else{
+      cart=JSON.parse(localStorage.getItem('cart'));
+    }
+    $(document).on('click','.atc',function(){
+      console.log("the atc button is clicked");
+      var item_id = this.id.toString();
+      console.log(item_id);
+      if(cart[item_id] != undefined){
+        cart[item_id]=cart[item_id]+1;
+      }
+      else{
+        cart[item_id]=1;
+      }
+      //console.log(cart);
+      localStorage.setItem('cart',JSON.stringify(cart));
+      document.getElementById("cart").innerHTML = "Cart("+ Object.keys(cart).length+")";
+      //console.log(Object.keys(cart).length);
+    });
+/*    $(function () {
+    $('[data-toggle="popover"]').popover()
+    document.getElementById("cart").setAttribute('data-content','<h5>This is your cart</h5>')
+  });*/
+    DisplayCart(cart);
+    function DisplayCart(cart){
+      //console.log(cart);
+      var cartString = "";
+      cartString += "<h5>This is your cart</h5>";
+      var cartIndex=1;
+      for(var x in cart){
+      //console.log(x);
+      cartString += cartIndex;
+      cartString += document.getElementById("'"+"nm"+x+"'").innerHTML + "Quantity"+ cart[x] +"</br>";
+      cartIndex+=1;
+    }
+      $('[data-toggle="popover"]').popover();
+      document.getElementById("cart").setAttribute('data-content',cartString);
+    }
+
+
+
+  </script>-->
+  {% endblock %}
